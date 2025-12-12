@@ -1,4 +1,4 @@
-26769087154142324
+26770856562872790
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -384,6 +384,41 @@ battery CR-3032 coin cell vertical
 0
 2
 2
+BeeTracking
+CAPCP3225X100N_improved
+
+
+0
+2
+2
+BeeTracking
+Crystal_SMD_Abracon_ABM13W-4Pin_1.2x1.0mm
+Abracon Miniature Ceramic Smd Crystal ABM10 http://www.abracon.com/Resonators/ABM10.pdf
+SMD SMT crystal Abracon ABM10
+0
+4
+4
+BeeTracking
+DA14531_17-ball_WLCSP
+
+
+0
+17
+17
+BeeTracking
+FPC_1x08_P1.00mm_plug_3mm
+
+
+0
+8
+8
+BeeTracking
+LGA-12L_LIS2DU12_STM
+
+LIS2DU12 
+0
+12
+12
 Button_Switch_Keyboard
 SW_Cherry_MX_1.00u_PCB
 Cherry MX keyswitch, 1.00u, PCB mount, http://cherryamericas.com/wp-content/uploads/2014/12/mx_cat.pdf
@@ -70573,34 +70608,6 @@ Yellow 5381 Series LED
 0
 2
 2
-Library
-CAPCP3225X100N_improved
-
-
-0
-2
-2
-Library
-LGA-12L_LIS2DU12_STM
-
-LIS2DU12 
-0
-12
-12
-Library
-LGA-12L_LIS2DU12_STM-L
-
-LIS2DU12 
-0
-12
-12
-Library
-LGA-12L_LIS2DU12_STM-M
-
-LIS2DU12 
-0
-12
-12
 Module
 A20_OLINUXINO_LIME2
 A20 Olinuxino LIME2, 1.2GHz, 512-1024MB RAM, Micro-SD, NAND or eMMC, 1000Mbit Ethernet
