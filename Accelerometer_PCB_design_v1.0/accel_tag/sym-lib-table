@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "BLE_tag")(type "KiCad")(uri "${KIPRJMOD}/BLE_tag.kicad_sym")(options "")(descr ""))
+)
