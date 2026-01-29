@@ -45,6 +45,8 @@
 #include "i2c.h"
 
 #define LIS2DU12_ADDR  0x18  // SA0 low : 0x18, SA0 high : 0x19
+#define MAX_SAMPLES 128
+
 
 static const i2c_cfg_t i2c_cfg = {
     .clock_cfg.ss_hcnt = I2C_SS_SCL_HCNT_REG_RESET,
@@ -86,15 +88,21 @@ int main(void)
 		// Writing to a register
 		uint8_t write = 0xB0;
 		i2c_write(0x14,&write,1); // Write 0b10110000 to CTRL5, arbitraty setting but you have to change this to something to turn on the accel
-	
+		
+		//setting fifo mode
+		uint8_t FIFO_mode = 0x06;
+		i2c_write(0x15,&FIFO_mode,1);
+		char buf[32];
+
 		// Reading a register
     uint8_t whoami = 0;
 		// i2c_read_reg(register_address, var, length in bytes)
     i2c_read_reg(0x43, &whoami, 1);
 	
-		char buf[32];
 		sprintf(buf, "WHO_AM_I = 0x%02X\r\n", whoami);
 		printf_string(UART, buf);
+
+		
 	
 		// X,Y,Z values are each stored in two registers. Need to concatenate them.
 		uint8_t X_L = 0;
@@ -103,22 +111,58 @@ int main(void)
 		uint8_t Y_H = 0;
 		uint8_t Z_L = 0;
 		uint8_t Z_H = 0;
+		uint8_t FIFO_status = 0;
+
+		uint16_t FIFO_data[MAX_SAMPLES][3];
+
+				
+		uint8_t fifo2;
 		
 		while(1){
-				i2c_read_reg(0x28, &X_L, 1);
-				i2c_read_reg(0x29, &X_H, 1);
-				i2c_read_reg(0x2A, &Y_L, 1);
-				i2c_read_reg(0x2B, &Y_H, 1);
-				i2c_read_reg(0x2C, &Z_L, 1);
-				i2c_read_reg(0x2D, &Z_H, 1);
-			
-				int16_t raw_x = (int16_t)((X_H << 8) | X_L);
-				int16_t raw_y = (int16_t)((Y_H << 8) | Y_L);
-				int16_t raw_z = (int16_t)((Z_H << 8) | Z_L);
+				// Testing FIFO buffer register status
+		
+
+
+				i2c_read_reg(0x27, &fifo2, 1);
+
+				uint8_t FIFO_words = fifo2;
+				sprintf(buf, "FIFO_words = %u\r\n", fifo2);
+				printf(UART, buf);
 				
-				char buf[256];
-				sprintf(buf, "X = %d     Y = %d     Z = %d\r\n", raw_x,raw_y,raw_z);
-				printf_string(UART, buf);
+				uint8_t sample_count = 0;
+				
+				// If the buffer is full collect samples
+				if (FIFO_words == MAX_SAMPLES){
+					
+					
+					while (FIFO_words > sample_count){
+						i2c_read_reg(0x28, &X_L, 1);
+						i2c_read_reg(0x29, &X_H, 1);
+						i2c_read_reg(0x2A, &Y_L, 1);
+						i2c_read_reg(0x2B, &Y_H, 1);
+						i2c_read_reg(0x2C, &Z_L, 1);
+						i2c_read_reg(0x2D, &Z_H, 1);
+
+						
+						FIFO_data[sample_count][0] = ((X_H << 8) | X_L);
+						FIFO_data[sample_count][1] = ((Y_H << 8) | Y_L);
+						FIFO_data[sample_count][2] = ((Z_H << 8) | Z_L);
+						sample_count += 1;
+						
+					}
+					for (int i = 0; i < MAX_SAMPLES; i++) {
+						char buf[128];
+						sprintf(buf, "[%03d] X:%u, Y:%u, Z:%u\r\n", 
+               i, 
+               FIFO_data[i][0], 
+               FIFO_data[i][1], 
+               FIFO_data[i][2]);
+						printf_string(UART, buf);
+					}
+				}
+				
+
+				
 		}
 		
     while (1);
